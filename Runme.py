@@ -24,7 +24,7 @@ Indices = np.random.randint(25, size=n)  # 5-fold cross-validation indices
 
 Group1 = []
 Group2 = []
-[Group1.append(x) for x in range(0, n) if Indices[x] <= 10]  # 2 for 10%, 5 for 25%, 20 for 100% of training group
+[Group1.append(x) for x in range(0, n) if Indices[x] <= 20]  # 2 for 10%, 5 for 25%, 20 for 100% of training group
 [Group2.append(x) for x in range(0, n) if Indices[x] >= 21]  # test group
 n1 = len(Group1)  # num of nodes in training group
 n2 = len(Group2)  # num of nodes in test group
@@ -32,7 +32,7 @@ CombG = G[Group1+Group2, :][:, Group1+Group2]
 CombA = A[Group1+Group2, :]
 
 '''################# Accelerated Attributed Network Embedding #################'''
-print 'Accelerated Attributed Network Embedding (AANE), 5-fold with 50% of training is used:'
+print 'Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:'
 start_time = time.time()
 h1 = aane_fun(CombG, CombA, d, lambd, rho)
 print "time elapsed: {:.2f}s".format(time.time() - start_time)

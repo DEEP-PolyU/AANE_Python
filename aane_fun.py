@@ -52,6 +52,8 @@ def aane_fun(net, attri, d, *varargs):
     z = h.copy()
     affi = -1  # Index for affinity matrix sa
     u = np.zeros((n, d))
+    nexidx = np.split(net.indices, net.indptr[1:-1])
+    net = np.split(net.data, net.indptr[1:-1])
     '''################# Update functions #################'''
     def updateh():
         global affi, sa, h
@@ -63,19 +65,18 @@ def aane_fun(net, attri, d, *varargs):
                 affi = blocki
             sums = sa.dot(z) * 2
             for i in range(indexblock, indexblock + min(n - indexblock, block)):
-                neighbor = z[net[:, i].indices, :]  # the set of adjacent nodes of node i
+                neighbor = z[nexidx[i], :]  # the set of adjacent nodes of node i
                 for j in range(1):
                     normi_j = np.linalg.norm(neighbor - h[i, :], axis=1)  # norm of h_i^k-z_j^k
                     nzidx = normi_j != 0  # Non-equal Index
                     if np.any(nzidx):
-                        normi_j = (lambd * net[:, i].data)[nzidx] / normi_j[nzidx]
-                        h[i, :] = np.dot(
-                            sums[i - indexblock, :] + (neighbor[nzidx, :] * normi_j.reshape((-1, 1))).sum(0) + rho * (
-                                z[i, :] - u[i, :]),
-                            np.linalg.pinv(xtx + normi_j.sum() * np.eye(d)))
+                        normi_j = (lambd * net[i][nzidx]) / normi_j[nzidx]
+                        h[i, :] = np.linalg.solve(xtx + normi_j.sum() * np.eye(d), sums[i - indexblock, :] + (
+                            neighbor[nzidx, :] * normi_j.reshape((-1, 1))).sum(0) + rho * (
+                                                      z[i, :] - u[i, :]))
                     else:
-                        h[i, :] = np.dot(sums[i - indexblock, :] + rho * (
-                            z[i, :] - u[i, :]), np.linalg.pinv(xtx))
+                        h[i, :] = np.linalg.solve(xtx, sums[i - indexblock, :] + rho * (
+                            z[i, :] - u[i, :]))
     def updatez():
         global affi, sa, z
         xtx = np.dot(h.transpose(), h) * 2 + rho * np.eye(d)
@@ -86,19 +87,18 @@ def aane_fun(net, attri, d, *varargs):
                 affi = blocki
             sums = sa.dot(h) * 2
             for i in range(indexblock, indexblock + min(n - indexblock, block)):
-                neighbor = h[net[:, i].indices, :]  # the set of adjacent nodes of node i
+                neighbor = h[nexidx[i], :]  # the set of adjacent nodes of node i
                 for j in range(1):
                     normi_j = np.linalg.norm(neighbor - z[i, :], axis=1)  # norm of h_i^k-z_j^k
                     nzidx = normi_j != 0  # Non-equal Index
                     if np.any(nzidx):
-                        normi_j = (lambd * net[:, i].data)[nzidx] / normi_j[nzidx]
-                        z[i, :] = np.dot(
-                            sums[i - indexblock, :] + (neighbor[nzidx, :] * normi_j.reshape((-1, 1))).sum(0) + rho * (
-                                h[i, :] + u[i, :]),
-                            np.linalg.pinv(xtx + normi_j.sum() * np.eye(d)))
+                        normi_j = (lambd * net[i][nzidx]) / normi_j[nzidx]
+                        z[i, :] = np.linalg.solve(xtx + normi_j.sum() * np.eye(d), sums[i - indexblock, :] + (
+                            neighbor[nzidx, :] * normi_j.reshape((-1, 1))).sum(0) + rho * (
+                                                      h[i, :] + u[i, :]))
                     else:
-                        z[i, :] = np.dot(sums[i - indexblock, :] + rho * (h[i, :] + u[i, :]),
-                                         np.linalg.pinv(xtx))
+                        z[i, :] = np.linalg.solve(xtx, sums[i - indexblock, :] + rho * (
+                            h[i, :] + u[i, :]))
     '''################# First update h #################'''
     updateh()
     '''################# Iterations #################'''

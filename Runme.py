@@ -32,14 +32,14 @@ CombG = G[Group1+Group2, :][:, Group1+Group2]
 CombA = A[Group1+Group2, :]
 
 '''################# Accelerated Attributed Network Embedding #################'''
-print "Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:"
+print("Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:")
 start_time = time.time()
 h1 = aane_fun(CombG, CombA, d, lambd, rho)
-print "time elapsed: {:.2f}s".format(time.time() - start_time)
+print("time elapsed: {:.2f}s".format(time.time() - start_time))
 
 '''################# AANE for a Pure Network #################'''
-print "AANE for a pure network:"
+print("AANE for a pure network:")
 start_time = time.time()
 h2 = aane_fun(CombG, CombG, d, lambd, rho)
-print "time elapsed: {:.2f}s".format(time.time() - start_time)
+print("time elapsed: {:.2f}s".format(time.time() - start_time))
 sio.savemat('Embedding.mat', {"H_AANE": h1}, {"H_net": h2})

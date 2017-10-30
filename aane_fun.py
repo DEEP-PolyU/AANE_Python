@@ -31,7 +31,7 @@ def aane_fun(net, attri, d, *varargs):
     attri = csc_matrix(attri)
     lambd = 0.1  # Initial regularization parameter
     rho = 5  # Initial penalty parameter
-    splitnum = 1  # number of worker used for distribution
+    splitnum = 1  # number of pieces we split the SA for limited cache
     if len(varargs) > 0:
         lambd = varargs[0]
         rho = varargs[1]

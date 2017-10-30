@@ -47,6 +47,7 @@ def aane_fun(net, attri, d, *varargs):
         sumcol = net.sum(0)
         h = svds(net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10*d, n)]], d)[0]
     block = min(int(ceil(float(n) / splitnum)), 7575)  # Treat at least each 7575 nodes as a block
+    splitnum = int(ceil(float(n) / block))
     with np.errstate(divide='ignore'):  # inf will be ignored
         attri = attri.transpose() * sparse.diags(np.ravel(np.power(attri.power(2).sum(1), -0.5)))
     z = h.copy()

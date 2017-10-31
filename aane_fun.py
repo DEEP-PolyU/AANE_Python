@@ -1,9 +1,9 @@
 def aane_fun(net, attri, d, *varargs):
     """Jointly embed net and attri into embedding representation h
        h = aane_fun(net,attri,d);
-       h = aane_fun(net,attri,d,lambda,rho);
-       h = aane_fun(net,attri,d,lambda,rho,'Att');
-       h = aane_fun(net,attri,d,lambda,rho,'Att',worknum);
+       h = aane_fun(net,attri,d,lambd,rho);
+       h = aane_fun(net,attri,d,lambd,rho,'Att');
+       h = aane_fun(net,attri,d,lambd,rho,'Att',worknum);
     :param net: the weighted adjacency matrix
     :param attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation
@@ -15,14 +15,13 @@ def aane_fun(net, attri, d, *varargs):
     Copyright 2017, Xiao Huang and Jundong Li.
     $Revision: 1.0.0 $  $Date: 2017/10/25 00:00:00 $
     """
-    global affi, sa, h, z
     import numpy as np
     from scipy import sparse
     from scipy.sparse import csc_matrix
     from scipy.sparse.linalg import svds
     from math import ceil
-
     '''################# Parameters #################'''
+    global affi, sa, h, z
     maxiter = 2  # Max num of iteration
     [n, m] = attri.shape  # n = Total num of nodes, m = attribute category num
     net = sparse.lil_matrix(net)

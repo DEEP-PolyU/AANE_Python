@@ -1,5 +1,5 @@
 def AANE_fun(Net, Attri, d, *varargs):
-    """Jointly embed Net and Attri into embedding representation h
+    """Jointly embed Net and Attri into embedding representation H
        H = AANE_fun(Net,Attri,d)
        H = AANE_fun(Net,Attri,d,lambd,rho)
        H = AANE_fun(Net,Attri,d,lambd,rho,'Att')

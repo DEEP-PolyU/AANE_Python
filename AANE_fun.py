@@ -1,9 +1,9 @@
 def AANE_fun(Net, Attri, d, *varargs):
     """Jointly embed Net and Attri into embedding representation h
-       H = AANE_fun(Net,Attri,d);
-       H = AANE_fun(Net,Attri,d,lambd,rho);
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att');
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum);
+       H = AANE_fun(Net,Attri,d)
+       H = AANE_fun(Net,Attri,d,lambd,rho)
+       H = AANE_fun(Net,Attri,d,lambd,rho,'Att')
+       H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum)
     :param Net: the weighted adjacency matrix
     :param Attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation

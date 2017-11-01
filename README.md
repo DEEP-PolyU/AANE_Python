@@ -14,19 +14,19 @@ Accelerated Attributed Network Embedding, SDM 2017
 
 ## Input and Output
 - Input: dataset such as "BlogCatalog.mat" and "Flickr.mat"
-- Output: Embedding.mat, with "H_AANE" denotes the attributed network embedding, and "H_net" denotes the network embedding
+- Output: Embedding.mat, with "H_AANE" denotes the attributed network embedding, and "H_Net" denotes the network embedding
 
 ## Code in Python
 ```
-h = aane_fun(net,attri,d);  
-h = aane_fun(net,attri,d,lambda,rho);  
-h = aane_fun(net,attri,d,lambda,rho,'Att');  
-h = aane_fun(net,attri,d,lambda,rho,'Att',worknum);  
+H = AANE_fun(Net,Attri,d)
+H = AANE_fun(Net,Attri,d,lambd,rho)
+H = AANE_fun(Net,Attri,d,lambd,rho,'Att')
+H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum)
 ```
 
-- h is the joint embedding representation of net and attri;
-- net is the weighted adjacency matrix;
-- attri is the node attribute information matrix with row denotes nodes.
+- H is the joint embedding representation of Net and Attri;
+- Net is the weighted adjacency matrix;
+- Attri is the node attribute information matrix with row denotes nodes.
 
 
 ## Reference in BibTeX: 

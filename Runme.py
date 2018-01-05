@@ -20,7 +20,7 @@ A = mat_contents["Attributes"]
 Label = mat_contents["Label"]
 del mat_contents
 n = G.shape[0]
-Indices = np.random.randint(25, size=n)  # 5-fold cross-validation indices
+Indices = np.random.randint(25, size=n)+1  # 5-fold cross-validation indices
 
 Group1 = []
 Group2 = []

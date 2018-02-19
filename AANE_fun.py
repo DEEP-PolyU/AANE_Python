@@ -2,18 +2,20 @@ def AANE_fun(Net, Attri, d, *varargs):
     """Jointly embed Net and Attri into embedding representation H
        H = AANE_fun(Net,Attri,d)
        H = AANE_fun(Net,Attri,d,lambd,rho)
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att')
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att',splitnum)
     :param Net: the weighted adjacency matrix
     :param Attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation
     :param lambd: the regularization parameter
     :param rho: the penalty parameter
+    :param maxiter: the maximum number of iteration
     :param 'Att': refers to conduct Initialization from the SVD of Attri
     :param splitnum: the number of pieces we split the SA for limited cache
     :return: the embedding representation H
-    Copyright 2017, Xiao Huang and Jundong Li.
-    $Revision: 1.0.1 $  $Date: 2017/10/30 00:00:00 $
+    Copyright 2017 & 2018, Xiao Huang and Jundong Li.
+    $Revision: 1.0.2 $  $Date: 2018/02/19 00:00:00 $
     """
     import numpy as np
     from scipy import sparse
@@ -28,23 +30,23 @@ def AANE_fun(Net, Attri, d, *varargs):
     Net.setdiag(np.zeros(n))
     Net = csc_matrix(Net)
     Attri = csc_matrix(Attri)
-    lambd = 0.1  # Initial regularization parameter
+    lambd = 0.05  # Initial regularization parameter
     rho = 5  # Initial penalty parameter
     splitnum = 1  # number of pieces we split the SA for limited cache
+    if len(varargs) >= 4 and varargs[3] == 'Att':
+        sumcol = Attri.sum(0)
+        H = svds(Attri[:, sorted(range(m), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, m)]], d)[0]
+    else:
+        sumcol = Net.sum(0)
+        H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, n)]], d)[0]
+
     if len(varargs) > 0:
         lambd = varargs[0]
         rho = varargs[1]
-        if len(varargs) >=3 and varargs[2] == 'Att':
-            sumcol = Attri.sum(0)
-            H = svds(Attri[:, sorted(range(m), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, m)]], d)[0]
-        else:
-            sumcol = Net.sum(0)
-            H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, n)]], d)[0]
-        if len(varargs) >=4:
-            splitnum = varargs[3]
-    else:
-        sumcol = Net.sum(0)
-        H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10*d, n)]], d)[0]
+        if len(varargs) >= 3:
+            maxiter = varargs[2]
+            if len(varargs) >=5:
+                splitnum = varargs[4]
     block = min(int(ceil(float(n) / splitnum)), 7575)  # Treat at least each 7575 nodes as a block
     splitnum = int(ceil(float(n) / block))
     with np.errstate(divide='ignore'):  # inf will be ignored

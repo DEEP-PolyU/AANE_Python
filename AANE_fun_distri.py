@@ -2,13 +2,15 @@ def AANE_fun(Net, Attri, d, *varargs):
     """Jointly embed Net and Attri into embedding representation H
        H = AANE_fun(Net,Attri,d)
        H = AANE_fun(Net,Attri,d,lambd,rho)
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att')
-       H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum, worknum)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att',splitnum, worknum)
     :param Net: the weighted adjacency matrix
     :param Attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation
     :param lambd: the regularization parameter
     :param rho: the penalty parameter
+    :param maxiter: the maximum number of iteration
     :param 'Att': refers to conduct Initialization from the SVD of Attri
     :param splitnum: the number of pieces we split the SA for limited cache
     :param worknum: the number of worker
@@ -101,25 +103,24 @@ def AANE_fun(Net, Attri, d, *varargs):
     Net.setdiag(np.zeros(n))
     Net = csc_matrix(Net)
     Attri = csc_matrix(Attri)
-    lambd = 0.1  # Initial regularization parameter
+    lambd = 0.05  # Initial regularization parameter
     rho = 5  # Initial penalty parameter
     splitnum = 60  # number of pieces we split the SA for limited cache
     worknum = 3  # number of worker used for distribution
+    if len(varargs) >= 4 and varargs[3] == 'Att':
+        sumcol = Attri.sum(0)
+        H = svds(Attri[:, sorted(range(m), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, m)]], d)[0]
+    else:
+        sumcol = Net.sum(0)
+        H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, n)]], d)[0]
     if len(varargs) > 0:
         lambd = varargs[0]
         rho = varargs[1]
-        if len(varargs) >=3 and varargs[2] == 'Att':
-            sumcol = Attri.sum(0)
-            H = svds(Attri[:, sorted(range(m), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, m)]], d)[0]
-        else:
-            sumcol = Net.sum(0)
-            H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, n)]], d)[0]
-        if len(varargs) >=4:
-            worknum = varargs[4]
-            splitnum = ceil(float(varargs[3]/varargs[4])) * varargs[4]
-    else:
-        sumcol = Net.sum(0)
-        H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10*d, n)]], d)[0]
+        if len(varargs) >= 3:
+            maxiter = varargs[2]
+            if len(varargs) >= 5:
+                worknum = varargs[5]
+                splitnum = ceil(float(varargs[4]/varargs[5])) * varargs[5]
     block = int(ceil(float(n) / splitnum))
     with np.errstate(divide='ignore'):  # inf will be ignored
         Attri = Attri.transpose() * sparse.diags(np.ravel(np.power(Attri.power(2).sum(1), -0.5)))

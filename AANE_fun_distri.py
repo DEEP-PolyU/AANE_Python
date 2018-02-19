@@ -15,8 +15,8 @@ def AANE_fun(Net, Attri, d, *varargs):
     :param splitnum: the number of pieces we split the SA for limited cache
     :param worknum: the number of worker
     :return: the embedding representation H
-    Copyright 2017, Xiao Huang and Jundong Li.
-    $Revision: 1.0.0 $  $Date: 2017/11/06 00:00:00 $
+    Copyright 2017 & 2018, Xiao Huang and Jundong Li.
+    $Revision: 1.0.2 $  $Date: 2018/02/19 00:00:00 $
     """
     import numpy as np
     from scipy import sparse

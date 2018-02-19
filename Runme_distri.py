@@ -3,7 +3,7 @@ import scipy.io as sio
 from AANE_fun_distri import AANE_fun
 import time
 
-print("The function for distributed computing could only be run on macOS.")
+print("Current version for distributed computing could only be run on macOS.")
 
 '''################# Load data  #################'''
 mat_contents = sio.loadmat('BlogCatalog.mat')
@@ -16,6 +16,7 @@ rho = 5  # the penalty parameter
 
 '''################# Experimental Settings #################'''
 d = 100  # the dimension of the embedding representation
+maxiter = 2  # the maximum number of iteration
 G = mat_contents["Network"]
 A = mat_contents["Attributes"]
 del mat_contents
@@ -35,12 +36,12 @@ CombA = A[Group1+Group2, :]
 if __name__ == "__main__":
     print("Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:")
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, 'Net', 60, 1)
+    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 60, 1)
     print("time elapsed with 1 worker: {:.2f}s".format(time.time() - start_time))
     sio.savemat('H.mat', {"H": H})
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, 'Net', 60, 2)
+    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 60, 2)
     print("time elapsed with 2 workers: {:.2f}s".format(time.time() - start_time))
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, 'Net', 60, 3)
+    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 60, 3)
     print("time elapsed with 3 workers: {:.2f}s".format(time.time() - start_time))

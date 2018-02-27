@@ -34,8 +34,9 @@ def AANE_fun(Net, Attri, d, *varargs):
     rho = 5  # Initial penalty parameter
     splitnum = 1  # number of pieces we split the SA for limited cache
     if len(varargs) >= 4 and varargs[3] == 'Att':
-        sumcol = Attri.sum(0)
-        H = svds(Attri[:, sorted(range(m), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, m)]], d)[0]
+        sumcol = np.arange(m)
+        np.random.shuffle(sumcol)
+        H = svds(Attri[:, sumcol[0:min(10 * d, m)]], d)[0]
     else:
         sumcol = Net.sum(0)
         H = svds(Net[:, sorted(range(n), key=lambda k: sumcol[0, k], reverse=True)[0:min(10 * d, n)]], d)[0]

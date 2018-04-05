@@ -4,7 +4,8 @@ def AANE_fun(Net, Attri, d, *varargs):
        H = AANE_fun(Net,Attri,d,lambd,rho)
        H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
        H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
-       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att',splitnum, worknum)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum)
+       H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum, splitnum)
     :param Net: the weighted adjacency matrix
     :param Attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation
@@ -12,11 +13,11 @@ def AANE_fun(Net, Attri, d, *varargs):
     :param rho: the penalty parameter
     :param maxiter: the maximum number of iteration
     :param 'Att': refers to conduct Initialization from the SVD of Attri
-    :param splitnum: the number of pieces we split the SA for limited cache
     :param worknum: the number of worker
+    :param splitnum: number of pieces we split the SA for limited cache
     :return: the embedding representation H
     Copyright 2017 & 2018, Xiao Huang and Jundong Li.
-    $Revision: 1.0.2 $  $Date: 2018/02/19 00:00:00 $
+    $Revision: 1.0.3 $  $Date: 2018/04/05 00:00:00 $
     """
     import numpy as np
     from scipy import sparse
@@ -120,8 +121,11 @@ def AANE_fun(Net, Attri, d, *varargs):
         if len(varargs) >= 3:
             maxiter = varargs[2]
             if len(varargs) >= 5:
-                worknum = varargs[5]
-                splitnum = ceil(float(varargs[4]/varargs[5])) * varargs[5]
+                worknum = int(varargs[4])
+                splitnum = worknum
+                if len(varargs) >= 6:
+                    worknum = varargs[4]
+                    splitnum = ceil(float(varargs[5]/varargs[4])) * varargs[4]
     block = int(ceil(float(n) / splitnum))
     with np.errstate(divide='ignore'):  # inf will be ignored
         Attri = Attri.transpose() * sparse.diags(np.ravel(np.power(Attri.power(2).sum(1), -0.5)))

@@ -106,8 +106,8 @@ def AANE_fun(Net, Attri, d, *varargs):
     Attri = csc_matrix(Attri)
     lambd = 0.05  # Initial regularization parameter
     rho = 5  # Initial penalty parameter
-    splitnum = 60  # number of pieces we split the SA for limited cache
     worknum = 3  # number of worker used for distribution
+    splitnum = worknum  # number of pieces we split the SA for limited cache
     if len(varargs) >= 4 and varargs[3] == 'Att':
         sumcol = np.arange(m)
         np.random.shuffle(sumcol)
@@ -124,8 +124,7 @@ def AANE_fun(Net, Attri, d, *varargs):
                 worknum = int(varargs[4])
                 splitnum = worknum
                 if len(varargs) >= 6:
-                    worknum = varargs[4]
-                    splitnum = ceil(float(varargs[5]/varargs[4])) * varargs[4]
+                    splitnum = ceil(float(varargs[5]/worknum)) * worknum
     block = int(ceil(float(n) / splitnum))
     with np.errstate(divide='ignore'):  # inf will be ignored
         Attri = Attri.transpose() * sparse.diags(np.ravel(np.power(Attri.power(2).sum(1), -0.5)))

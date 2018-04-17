@@ -8,29 +8,27 @@ import multiprocessing as mp
 
 
 class AANE:
-
+    """Jointly embed Net and Attri into embedding representation H
+    H = AANE_fun(Net,Attri,d)
+    H = AANE_fun(Net,Attri,d,lambd,rho)
+    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
+    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
+    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum)
+    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum, splitnum)
+    :param Net: the weighted adjacency matrix
+    :param Attri: the attribute information matrix with row denotes nodes
+    :param d: the dimension of the embedding representation
+    :param lambd: the regularization parameter
+    :param rho: the penalty parameter
+    :param maxiter: the maximum number of iteration
+    :param 'Att': refers to conduct Initialization from the SVD of Attri
+    :param worknum: the number of worker
+    :param splitnum: number of pieces we split the SA for limited cache
+    :return: the embedding representation H
+    Copyright 2017 & 2018, Xiao Huang and Jundong Li.
+    $Revision: 1.0.3 $  $Date: 2018/04/05 00:00:00 $
+    """
     def __init__(self, Net, Attri, d, *varargs):
-        """Jointly embed Net and Attri into embedding representation H
-           H = AANE_fun(Net,Attri,d)
-           H = AANE_fun(Net,Attri,d,lambd,rho)
-           H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
-           H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
-           H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum)
-           H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att', worknum, splitnum)
-        :param Net: the weighted adjacency matrix
-        :param Attri: the attribute information matrix with row denotes nodes
-        :param d: the dimension of the embedding representation
-        :param lambd: the regularization parameter
-        :param rho: the penalty parameter
-        :param maxiter: the maximum number of iteration
-        :param 'Att': refers to conduct Initialization from the SVD of Attri
-        :param worknum: the number of worker
-        :param splitnum: number of pieces we split the SA for limited cache
-        :return: the embedding representation H
-        Copyright 2017 & 2018, Xiao Huang and Jundong Li.
-        $Revision: 1.0.3 $  $Date: 2018/04/05 00:00:00 $
-        """
-
         # shared memory
         #self.output = mp.Manager().dict()
 
@@ -51,7 +49,6 @@ class AANE:
         #self.m = None
         #self.worknum = None
         #self.splitnum = None
-
 
         self.maxiter = 2  # Max num of iteration
         [self.n, m] = Attri.shape  # n = Total num of nodes, m = attribute category num

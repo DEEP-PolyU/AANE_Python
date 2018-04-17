@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.io as sio
-from AANE_fun import AANE_fun
+from AANE_fun import AANE
 import time
 
 
@@ -34,12 +34,12 @@ CombA = A[Group1+Group2, :]
 '''################# Accelerated Attributed Network Embedding #################'''
 print("Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:")
 start_time = time.time()
-H_AANE = AANE_fun(CombG, CombA, d, lambd, rho)
+H_AANE = AANE(CombG, CombA, d, lambd, rho).function()
 print("time elapsed: {:.2f}s".format(time.time() - start_time))
 
 '''################# AANE for a Pure Network #################'''
 print("AANE for a pure network:")
 start_time = time.time()
-H_Net = AANE_fun(CombG, CombG, d, lambd, rho)
+H_Net = AANE(CombG, CombG, d, lambd, rho).function()
 print("time elapsed: {:.2f}s".format(time.time() - start_time))
 sio.savemat('Embedding.mat', {"H_AANE": H_AANE, "H_Net": H_Net})

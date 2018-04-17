@@ -6,11 +6,11 @@ from math import ceil
 
 class AANE:
     """Jointly embed Net and Attri into embedding representation H
-    H = AANE_fun(Net,Attri,d)
-    H = AANE_fun(Net,Attri,d,lambd,rho)
-    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter)
-    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att')
-    H = AANE_fun(Net,Attri,d,lambd,rho,maxiter,'Att',splitnum)
+    H = AANE(Net,Attri,d).function()
+    H = AANE(Net,Attri,d,lambd,rho).function()
+    H = AANE(Net,Attri,d,lambd,rho,maxiter).function()
+    H = AANE(Net,Attri,d,lambd,rho,maxiter,'Att').function()
+    H = AANE(Net,Attri,d,lambd,rho,maxiter,'Att',splitnum).function()
     :param Net: the weighted adjacency matrix
     :param Attri: the attribute information matrix with row denotes nodes
     :param d: the dimension of the embedding representation

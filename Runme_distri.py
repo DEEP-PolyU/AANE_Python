@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.io as sio
-from AANE_fun_distri import AANE_fun
+from AANE_fun_distri import AANE
 import time
 
 print("Current version for distributed computing could only be run on macOS.")
@@ -36,12 +36,12 @@ CombA = A[Group1+Group2, :]
 if __name__ == "__main__":
     print("Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:")
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 1)
+    H = AANE(CombG, CombA, d, lambd, rho, maxiter, 'Net', 1, 6).funtion()  #  worknum=1, splitnum=6
     print("time elapsed with 1 worker: {:.2f}s".format(time.time() - start_time))
     sio.savemat('H.mat', {"H": H})
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 2)
+    H = AANE(CombG, CombA, d, lambd, rho, maxiter, 'Net', 2).funtion()
     print("time elapsed with 2 workers: {:.2f}s".format(time.time() - start_time))
     start_time = time.time()
-    H = AANE_fun(CombG, CombA, d, lambd, rho, maxiter, 'Net', 3)
+    H = AANE(CombG, CombA, d, lambd, rho, maxiter, 'Net', 3).funtion()
     print("time elapsed with 3 workers: {:.2f}s".format(time.time() - start_time))

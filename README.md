@@ -29,6 +29,7 @@ H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum)
 - Net is the weighted adjacency matrix;
 - Attri is the node attribute information matrix with row denotes nodes;
 - splitnum is the number of pieces we split the SA for limited cache.
+- Python 3.6.3 or 2.7.13 is recommended.
 
 ## Reference in BibTeX: 
 @conference{Huang-etal17Accelerated,  
@@ -53,4 +54,4 @@ H = AANE_fun(Net,Attri,d,lambd,rho,'Att',splitnum, worknum)
 - splitnum is the number of pieces we split the SA for limited cache;
 - worknum is the number of worker.
 
-The function for distributed computing could only be run on macOS.
+The function for distributed computing could only be run on macOS with Python 3.6.3 recommended.

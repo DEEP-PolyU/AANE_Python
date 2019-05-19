@@ -40,7 +40,7 @@ Pages = {633--641},
 Title = {Accelerated Attributed Network Embedding},  
 Year = {2017}}
 
-@article{Huang-etal18A,
+@article{Huang-etal18A,  
 Title = {A General Embedding Framework for Heterogeneous Information Learning in Large-Scale Networks},  
 Author = {Xiao Huang and Jundong Li and Na Zou and Xia Hu},  
 Booktitle = {ACM Transactions on Knowledge Discovery from Data},  
